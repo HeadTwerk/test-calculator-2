@@ -1,4 +1,7 @@
+
 # AngularTest1
+
+![Test Calculator 2](./project_screenshots/test-calculator-2.png)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.7.
 
