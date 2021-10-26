@@ -22,8 +22,9 @@ export class CalculatorComponent implements AfterViewInit {
   // @ViewChild("data_current_operand", {static: false}) previousOperandTextElement: ElementRef ;
   currentOperandTextElement: HTMLElement | null
   previousOperandTextElement: HTMLElement | null
-
-  
+  static lastClick = ''
+  static maxInt = 100001
+  static boolArr = new Array(CalculatorComponent.maxInt)
 
   ngAfterViewInit(): void {
     this.previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
@@ -43,6 +44,7 @@ export class CalculatorComponent implements AfterViewInit {
     // })
     this.previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
     this.currentOperandTextElement = <HTMLElement>document.querySelector('[data-current-operand]')
+    this.initPrimeSieve()
     this.clear()
   }
 
@@ -56,27 +58,48 @@ export class CalculatorComponent implements AfterViewInit {
     this.currentOperand = this.currentOperand.toString().slice(0, -1)
   }
 
-  appendNumber(number: string) {
-    if (number === '.' && this.currentOperand.includes('.')) return
-    this.currentOperand = this.currentOperand.toString() + number.toString()
+  isUnaryOperation(){
+    return (this.operation == "!" || this.operation == "?")
   }
 
-  chooseOperation(operation: string) {
-    if (this.currentOperand === '') return
-    if (this.previousOperand !== '') {
-      this.compute()
+  factorial(value = 0){
+    var fact = 1
+    for(;value>1; value--){
+      fact *= value
     }
-    this.operation = operation
-    this.previousOperand = this.currentOperand
-    this.currentOperand = ''
+    return fact
+  }
+
+  initPrimeSieve(){
+    CalculatorComponent.boolArr.fill(true)
+    CalculatorComponent.boolArr[0] = CalculatorComponent.boolArr[1] = false
+    for(let i =2; i<= Math.sqrt(CalculatorComponent.maxInt); i++){
+      for(let j = 2*i; j<CalculatorComponent.maxInt; j+=j){
+        CalculatorComponent.boolArr[j] = false
+      }
+    }
+  }
+
+  isPrime(value = 0){
+    if(CalculatorComponent.boolArr[value])
+      return "true"
+    else return "false"
   }
 
   compute() {
     let computation
-    const prev = parseFloat(this.previousOperand)
+    
+    const prev = this.isUnaryOperation()? 0: parseFloat(this.previousOperand)
     const current = parseFloat(this.currentOperand)
+
     if (isNaN(prev) || isNaN(current)) return
     switch (this.operation) {
+      case '!':
+        computation = this.factorial(current)
+        break;
+      case '?':
+        computation = this.isPrime(current)
+        break
       case '+':
         computation = prev + current
         break
@@ -97,6 +120,26 @@ export class CalculatorComponent implements AfterViewInit {
     this.previousOperand = ''
   }
 
+  appendNumber(number: string) {
+    if (number === '.' && this.currentOperand.includes('.')) return
+    this.currentOperand = this.currentOperand.toString() + number.toString()
+  }
+
+  chooseOperation(operation: string) {
+    if (this.currentOperand === '') return
+    if (
+      this.previousOperand !== '' || 
+      this.isUnaryOperation()
+    ) {
+      this.compute()
+    }
+    this.operation = operation
+    if(!this.isUnaryOperation()){
+      this.previousOperand = this.currentOperand
+      this.currentOperand = ''
+    }
+  }
+
   getDisplayNumber(number: Int32Array) {
     const stringNumber = number.toString()
     const integerDigits = parseFloat(stringNumber.split('.')[0])
@@ -115,39 +158,61 @@ export class CalculatorComponent implements AfterViewInit {
   }
 
   updateDisplay() {
-    this.currentOperandTextElement!.innerText =
-      this.getDisplayNumber(this.currentOperand)
-    if (this.operation != '') {
-      this.previousOperandTextElement!.innerText =
-        `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
+    if(typeof this.currentOperand != "string"){
+      this.currentOperandTextElement!.innerText =
+        this.getDisplayNumber(this.currentOperand)
+    }
+    else{
+      this.currentOperandTextElement!.innerText = 
+        this.currentOperand
+    }
+
+    if (this.operation != '' ) {
+      if(!this.isUnaryOperation()){
+        this.previousOperandTextElement!.innerText =
+          `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
+      }
+      else{
+        this.currentOperandTextElement!.innerText =
+          `${this.getDisplayNumber(this.currentOperand)} ${this.operation}`
+      }
     } else {
       this.previousOperandTextElement!.innerText = ''
     }
   }
 
   numberButtonsclick(innerText: any){
+    if(CalculatorComponent.lastClick == '='){
+      this.currentOperandTextElement!.innerText = ''
+      this.clear()
+    }
     this.appendNumber(innerText)
     this.updateDisplay()
+    CalculatorComponent.lastClick = innerText
   }
 
   operationButtonsclick(innerText: any)  {
     this.chooseOperation(innerText)
     this.updateDisplay()
+    CalculatorComponent.lastClick = innerText
   }
 
   equalsButtonclick(){
     this.compute()
     this.updateDisplay()
+    CalculatorComponent.lastClick = '='
   }
 
   allClearButtonclick(){
     this.clear()
     this.updateDisplay()
+    CalculatorComponent.lastClick = 'ac'
   }
 
   deleteButtonclick(){
     this.delete()
     this.updateDisplay()
+    CalculatorComponent.lastClick = 'del'
   }
 }
 

@@ -15,7 +15,9 @@
             <div data-current-operand class="current-operand"></div>
             </div>
             <button data-all-clear class="span-two" (click)="allClearButtonclick()">AC</button>
-            <button data-delete (click)="deleteButtonclick()">DEL</button>
+            <button data-delete class="span-two" (click)="deleteButtonclick()">DEL</button>
+            <button data-isprime class="span-two" (click)="operationButtonsclick('?')">PRIME ?</button>
+            <button data-factorial (click)="operationButtonsclick('!')">!</button>
             <button data-operation (click)="operationButtonsclick('÷')">÷</button>
             <button data-number (click)="numberButtonsclick('1')">1</button>
             <button data-number (click)="numberButtonsclick('2')">2</button>
