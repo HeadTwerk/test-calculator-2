@@ -1,12 +1,4 @@
-import {Component, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
-
-// const numberButtons = document.querySelectorAll('[data-number]')
-// const operationButtons = document.querySelectorAll('[data-operation]')
-// const equalsButton = document.querySelector('[data-equals]')
-// const deleteButton = document.querySelector('[data-delete]')
-// const allClearButton = document.querySelector('[data-all-clear]')
-// const previousOperandTextElement : HTMLElement
-// const currentOperandTextElement : HTMLElement
+import {Component, ElementRef, AfterViewInit} from '@angular/core';
 
 @Component({
   selector: 'app-calculator',
@@ -18,8 +10,6 @@ export class CalculatorComponent implements AfterViewInit {
   currentOperand: any
   previousOperand: any
   operation = ''
-  // @ViewChild("data_previous_operand", {static: false}) currentOperandTextElement: ElementRef ;
-  // @ViewChild("data_current_operand", {static: false}) previousOperandTextElement: ElementRef ;
   currentOperandTextElement: HTMLElement | null
   previousOperandTextElement: HTMLElement | null
   static lastClick = ''
@@ -34,14 +24,6 @@ export class CalculatorComponent implements AfterViewInit {
   // constructor(){}
 
   constructor(private el: ElementRef) {
-    // window.addEventListener("load", function(){
-    //   if(this.currentOperandTextElement == null){
-    //     this.currentOperandTextElement = <HTMLElement>document.querySelector('[data-current-operand]')
-    //   }
-    //   if(this.previousOperandTextElement == null){
-    //     this.previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
-    //   }
-    // })
     this.previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
     this.currentOperandTextElement = <HTMLElement>document.querySelector('[data-current-operand]')
     this.initPrimeSieve()
@@ -215,9 +197,3 @@ export class CalculatorComponent implements AfterViewInit {
     CalculatorComponent.lastClick = 'del'
   }
 }
-
-
-
-
-// const calculator = new CalculatorComponent()
-
