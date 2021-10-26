@@ -1,7 +1,9 @@
 
 # AngularTest1
 
-![Test Calculator 2](./project_screenshots/test-calculator-2.png)
+![Test Calculator 2](./project_screenshots/test-calculator-3.png)
+
+Based on JS tutorial for similar approach - [Build A Calculator With JavaScript Tutorial](https://www.youtube.com/watch?v=j59qQ7YWLxw&t=1268s)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.7.
 
