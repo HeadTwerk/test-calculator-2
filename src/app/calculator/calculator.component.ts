@@ -1,35 +1,48 @@
-import { AfterViewInit, Component, OnInit, ElementRef } from '@angular/core';
+import {Component, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 
-const numberButtons = document.querySelectorAll('[data-number]')
-const operationButtons = document.querySelectorAll('[data-operation]')
-const equalsButton = document.querySelector('[data-equals]')
-const deleteButton = document.querySelector('[data-delete]')
-const allClearButton = document.querySelector('[data-all-clear]')
-const previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
-const currentOperandTextElement = <HTMLElement>document.querySelector('[data-current-operand]')
+// const numberButtons = document.querySelectorAll('[data-number]')
+// const operationButtons = document.querySelectorAll('[data-operation]')
+// const equalsButton = document.querySelector('[data-equals]')
+// const deleteButton = document.querySelector('[data-delete]')
+// const allClearButton = document.querySelector('[data-all-clear]')
+// const previousOperandTextElement : HTMLElement
+// const currentOperandTextElement : HTMLElement
 
 @Component({
   selector: 'app-calculator',
   templateUrl: './calculator.component.html',
   styleUrls: ['./calculator.component.css'],
 })
-export class CalculatorComponent implements OnInit {
+export class CalculatorComponent implements AfterViewInit {
   title = 'Calculator';
   currentOperand: any
   previousOperand: any
   operation = ''
-  currentOperandTextElement: HTMLElement;
-  previousOperandTextElement: HTMLElement;
+  // @ViewChild("data_previous_operand", {static: false}) currentOperandTextElement: ElementRef ;
+  // @ViewChild("data_current_operand", {static: false}) previousOperandTextElement: ElementRef ;
+  currentOperandTextElement: HTMLElement | null
+  previousOperandTextElement: HTMLElement | null
+
   
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
+    this.currentOperandTextElement = <HTMLElement>document.querySelector('[data-current-operand]')
   }
 
   // constructor(){}
 
-  constructor(private elementRef:ElementRef) {
-    this.previousOperandTextElement = previousOperandTextElement
-    this.currentOperandTextElement = currentOperandTextElement
+  constructor(private el: ElementRef) {
+    // window.addEventListener("load", function(){
+    //   if(this.currentOperandTextElement == null){
+    //     this.currentOperandTextElement = <HTMLElement>document.querySelector('[data-current-operand]')
+    //   }
+    //   if(this.previousOperandTextElement == null){
+    //     this.previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
+    //   }
+    // })
+    this.previousOperandTextElement = <HTMLElement>document.querySelector('[data-previous-operand]')
+    this.currentOperandTextElement = <HTMLElement>document.querySelector('[data-current-operand]')
     this.clear()
   }
 
@@ -102,13 +115,13 @@ export class CalculatorComponent implements OnInit {
   }
 
   updateDisplay() {
-    this.currentOperandTextElement.innerText =
+    this.currentOperandTextElement!.innerText =
       this.getDisplayNumber(this.currentOperand)
     if (this.operation != '') {
-      this.previousOperandTextElement.innerText =
+      this.previousOperandTextElement!.innerText =
         `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
     } else {
-      this.previousOperandTextElement.innerText = ''
+      this.previousOperandTextElement!.innerText = ''
     }
   }
 

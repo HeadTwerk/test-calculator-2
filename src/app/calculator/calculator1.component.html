@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Number Operations</title>
+        <link href="./calculator.component.css" rel="stylesheet">
+        <!-- <script src="./calculator.component.js" defer></script> -->
+    </head>
+    <body>
+        <div class="calculator-grid">
+            <div class="output">
+            <div data-previous-operand class="previous-operand"></div>
+            <div data-current-operand class="current-operand"></div>
+            </div>
+            <button #data_all_clear class="span-two" (click)="allClearButtonclick()">AC</button>
+            <button #data_delete (click)="deleteButtonclick()">DEL</button>
+            <button #data_operation (click)="operationButtonsclick('÷')">÷</button>
+            <button #data_number (click)="numberButtonsclick('1')">1</button>
+            <button #data_number (click)="numberButtonsclick('2')">2</button>
+            <button #data_number (click)="numberButtonsclick('3')">3</button>
+            <button #data_operation (click)="operationButtonsclick('*')">*</button>
+            <button #data_number (click)="numberButtonsclick('4')">4</button>
+            <button #data_number (click)="numberButtonsclick('5')">5</button>
+            <button #data_number (click)="numberButtonsclick('6')">6</button>
+            <button #data_operation (click)="operationButtonsclick('+')">+</button>
+            <button #data_number (click)="numberButtonsclick('7')">7</button>
+            <button #data_number (click)="numberButtonsclick('8')">8</button>
+            <button #data_number (click)="numberButtonsclick('9')">9</button>
+            <button #data_operation (click)="operationButtonsclick('-')">-</button>
+            <button #data_number (click)="numberButtonsclick('.')">.</button>
+            <button #data_number (click)="numberButtonsclick('0')">0</button>
+            <button #data_equals class="span-two" (click)="equalsButtonclick()">=</button>
+        </div>
+    </body>
+</html>
