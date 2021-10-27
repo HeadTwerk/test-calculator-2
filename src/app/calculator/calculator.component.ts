@@ -40,7 +40,10 @@ export class CalculatorComponent implements AfterViewInit {
     this.currentOperand = this.currentOperand.toString().slice(0, -1)
   }
 
-  isUnaryOperation(){
+  isUnaryOperation(operation = ""){
+    if(operation!=""){
+      return (operation == "!" || operation == "?")  
+    }
     return (this.operation == "!" || this.operation == "?")
   }
 
@@ -68,14 +71,15 @@ export class CalculatorComponent implements AfterViewInit {
     else return "false"
   }
 
-  compute() {
+  compute(operation="") {
     let computation
     
-    const prev = this.isUnaryOperation()? 0: parseFloat(this.previousOperand)
+    const prev = this.isUnaryOperation(operation)? 0: parseFloat(this.previousOperand)
     const current = parseFloat(this.currentOperand)
 
     if (isNaN(prev) || isNaN(current)) return
-    switch (this.operation) {
+    if(operation == "") operation = this.operation
+    switch (operation) {
       case '!':
         computation = this.factorial(current)
         break;
@@ -97,28 +101,13 @@ export class CalculatorComponent implements AfterViewInit {
       default:
         return
     }
+    if(this.isUnaryOperation(operation)){
+      this.previousOperand = this.currentOperand
+    }
     this.currentOperand = computation
     this.operation = ''
-    this.previousOperand = ''
-  }
-
-  appendNumber(number: string) {
-    if (number === '.' && this.currentOperand.includes('.')) return
-    this.currentOperand = this.currentOperand.toString() + number.toString()
-  }
-
-  chooseOperation(operation: string) {
-    if (this.currentOperand === '') return
-    if (
-      this.previousOperand !== '' || 
-      this.isUnaryOperation()
-    ) {
-      this.compute()
-    }
-    this.operation = operation
-    if(!this.isUnaryOperation()){
-      this.previousOperand = this.currentOperand
-      this.currentOperand = ''
+    if(!this.isUnaryOperation(operation)){
+      this.previousOperand = ''
     }
   }
 
@@ -138,10 +127,30 @@ export class CalculatorComponent implements AfterViewInit {
       return integerDisplay
     }
   }
+  
+  appendNumber(number: string) {
+    if (number === '.' && this.currentOperand.includes('.')) return
+    this.currentOperand = this.currentOperand.toString() + number.toString()
+  }
+
+  chooseOperation(operation: string) {
+    if (this.currentOperand === '') return
+    if (this.isUnaryOperation(operation)) {
+      this.compute(operation)
+    }
+    else if( this.previousOperand !== '' ){
+      this.compute()
+    }
+    this.operation = operation
+    if(!this.isUnaryOperation()){
+      this.previousOperand = this.currentOperand
+      this.currentOperand = ''
+    }
+  }
 
   updateDisplay() {
     if(typeof this.currentOperand != "string"){
-      this.currentOperandTextElement!.innerText =
+      this.currentOperandTextElement!.innerText = 
         this.getDisplayNumber(this.currentOperand)
     }
     else{
@@ -150,21 +159,18 @@ export class CalculatorComponent implements AfterViewInit {
     }
 
     if (this.operation != '' ) {
-      if(!this.isUnaryOperation()){
-        this.previousOperandTextElement!.innerText =
-          `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
-      }
-      else{
-        this.currentOperandTextElement!.innerText =
-          `${this.getDisplayNumber(this.currentOperand)} ${this.operation}`
-      }
+      this.previousOperandTextElement!.innerText =
+        `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
     } else {
       this.previousOperandTextElement!.innerText = ''
     }
   }
 
   numberButtonsclick(innerText: any){
-    if(CalculatorComponent.lastClick == '='){
+    if(
+      CalculatorComponent.lastClick == '=' || 
+      this.isUnaryOperation()
+    ){
       this.currentOperandTextElement!.innerText = ''
       this.clear()
     }
@@ -174,6 +180,14 @@ export class CalculatorComponent implements AfterViewInit {
   }
 
   operationButtonsclick(innerText: any)  {
+    if(this.operation == "?"){
+      this.currentOperandTextElement!.innerText = ''
+      this.currentOperand = ''
+    }
+    if(this.isUnaryOperation()){
+      this.operation = ''
+      this.previousOperand = ''
+    }
     this.chooseOperation(innerText)
     this.updateDisplay()
     CalculatorComponent.lastClick = innerText
