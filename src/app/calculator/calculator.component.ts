@@ -41,10 +41,10 @@ export class CalculatorComponent implements AfterViewInit {
   }
 
   isUnaryOperation(operation = ""){
-    if(operation!=""){
-      return (operation == "!" || operation == "?")  
+    if(operation!==""){
+      return (operation === "!" || operation === "?")  
     }
-    return (this.operation == "!" || this.operation == "?")
+    return (this.operation === "!" || this.operation === "?")
   }
 
   factorial(value = 0){
@@ -66,9 +66,7 @@ export class CalculatorComponent implements AfterViewInit {
   }
 
   isPrime(value = 0){
-    if(CalculatorComponent.boolArr[value])
-      return "true"
-    else return "false"
+    return CalculatorComponent.boolArr[value]
   }
 
   compute(operation="") {
@@ -110,8 +108,16 @@ export class CalculatorComponent implements AfterViewInit {
       this.previousOperand = ''
     }
   }
+  
+  appendNumber(number: string) {
+    if (number === '.' && this.currentOperand.includes('.')) return
+    this.currentOperand = this.currentOperand.toString() + number.toString()
+  }
 
-  getDisplayNumber(number: Int32Array) {
+  getDisplayOutput(number: any) {
+    if(number === true) return "true"
+    else if(number === false) return "false"
+
     const stringNumber = number.toString()
     const integerDigits = parseFloat(stringNumber.split('.')[0])
     const decimalDigits = stringNumber.split('.')[1]
@@ -128,10 +134,6 @@ export class CalculatorComponent implements AfterViewInit {
     }
   }
   
-  appendNumber(number: string) {
-    if (number === '.' && this.currentOperand.includes('.')) return
-    this.currentOperand = this.currentOperand.toString() + number.toString()
-  }
 
   chooseOperation(operation: string) {
     if (this.currentOperand === '') return
@@ -149,18 +151,12 @@ export class CalculatorComponent implements AfterViewInit {
   }
 
   updateDisplay() {
-    if(typeof this.currentOperand != "string"){
-      this.currentOperandTextElement!.innerText = 
-        this.getDisplayNumber(this.currentOperand)
-    }
-    else{
-      this.currentOperandTextElement!.innerText = 
-        this.currentOperand
-    }
+    this.currentOperandTextElement!.innerText = 
+        this.getDisplayOutput(this.currentOperand)
 
-    if (this.operation != '' ) {
+    if (this.operation !== '' ) {
       this.previousOperandTextElement!.innerText =
-        `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
+        `${this.getDisplayOutput(this.previousOperand)} ${this.operation}`
     } else {
       this.previousOperandTextElement!.innerText = ''
     }
@@ -177,7 +173,7 @@ export class CalculatorComponent implements AfterViewInit {
   }
 
   operationButtonsclick(innerText: any)  {
-    if(this.operation == "?"){
+    if(this.operation === "?"){
       this.currentOperandTextElement!.innerText = ''
       this.currentOperand = ''
     }
