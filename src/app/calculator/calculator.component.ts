@@ -167,10 +167,7 @@ export class CalculatorComponent implements AfterViewInit {
   }
 
   numberButtonsclick(innerText: any){
-    if(
-      CalculatorComponent.lastClick == '=' || 
-      this.isUnaryOperation()
-    ){
+    if(this.isUnaryOperation()){
       this.currentOperandTextElement!.innerText = ''
       this.clear()
     }
